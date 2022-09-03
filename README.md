@@ -6,7 +6,7 @@ First Edit commit is on chapter 11.
 
 ## Working with the Code
 
-** Clone the repo **
+**Clone the repo**
 
 You can clone a repository from GitHub in a folder of your choice with the command:
 
