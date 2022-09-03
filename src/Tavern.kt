@@ -49,12 +49,9 @@ fun visitTavern() {
 
     val patronGold = mutableMapOf(
         TAVERN_MASTER to 86.00,
-        heroName to 4.50
+        heroName to 4.50,
+        *patrons.map { it to 6.00 }.toTypedArray()
     )
-
-    patrons.forEach {patronName ->
-        patronGold += patronName to 6.0
-    }
 
 
     narrate("$heroName sees several patrons in the tavern.")
