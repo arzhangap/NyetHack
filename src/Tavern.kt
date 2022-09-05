@@ -1,4 +1,6 @@
 import java.io.File
+import java.util.StringJoiner
+import kotlin.math.max
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -43,6 +45,8 @@ fun visitTavern() {
        println(item.replace(" holder ", ".".repeat((big-item.length)+5)))
    }
 
+    val orderHistory = mutableMapOf(*menuItemName.map { it to 0 }.toTypedArray())
+
     val patrons: MutableSet<String> = firstNames.shuffled()
         .zip(lastNames.shuffled()) { firstName, lastName -> "$firstName $lastName"}
         .toMutableSet()
@@ -53,7 +57,6 @@ fun visitTavern() {
         *patrons.map { it to 6.00 }.toTypedArray()
     )
 
-
     narrate("$heroName sees several patrons in the tavern.")
 
     narrate(patrons.joinToString())
@@ -62,8 +65,10 @@ fun visitTavern() {
     println("item of the day: $itemOfDay")
 
     displayPatronBalances(patronGold)
-    repeat(3){
-        placeOrder(patrons.random(), menuItemName.random(), patronGold)
+    repeat(7){
+        val order = menuItemName.random()
+        orderHistory[order] = orderHistory[order]!! + 1
+        placeOrder(patrons.random(), order, patronGold)
     }
     displayPatronBalances(patronGold)
 
@@ -75,6 +80,8 @@ fun visitTavern() {
     narrate("There are still some patrons in the tavern")
     narrate(patrons.joinToString())
 
+    val favItem = orderHistory.maxWith(Comparator { x, y -> x.value.compareTo(y.value) })?.key
+    println("Most ordered item of the day is $favItem")
 }
 
 private fun getFavoriteMenuItems(patron: String) : List<String> {
