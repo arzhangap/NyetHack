@@ -65,17 +65,18 @@ fun visitTavern() {
     println("item of the day: $itemOfDay")
 
     displayPatronBalances(patronGold)
-    repeat(7){
+    repeat(10){
         val order = menuItemName.random()
         orderHistory[order] = orderHistory[order]!! + 1
         placeOrder(patrons.random(), order, patronGold)
     }
     displayPatronBalances(patronGold)
 
-    val departingPatrons: List<String> = patrons.filter { patron -> patronGold.getOrDefault(patron, 0.0) < 4.0 }
-    patrons -= departingPatrons
-    patronGold -= departingPatrons
-    departingPatrons.forEach { patron -> narrate("$heroName sees $patron departing the tavern") }
+    patrons.filter { patron -> patronGold.getOrDefault(patron, 0.0) < 4.0 }.also {departingPatrons ->
+        // Eliminating
+        patrons -= departingPatrons
+        patronGold -= departingPatrons
+    }.forEach { patron -> narrate("$heroName sees $patron departing the tavern") }
 
     narrate("There are still some patrons in the tavern")
     narrate(patrons.joinToString())
