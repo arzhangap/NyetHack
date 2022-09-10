@@ -1,4 +1,5 @@
-import java.util.Locale
+package com.bignerdranch.nyetHack
+
 class Player {
     var name = "madrigal"
         get() = field.replaceFirstChar { it.uppercase() }

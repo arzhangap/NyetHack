@@ -1,8 +1,10 @@
+package com.bignerdranch.nyetHack
+
 val player = Player()
 fun main() {
     narrate("${player.name} is ${player.title}")
     player.changeName("Arzhang")
-//    narrate("A hero enters the town of Kronstadt. What is their name?") { message ->
+//    com.bignerdranch.nyetHack.narrate("A hero enters the town of Kronstadt. What is their name?") { message ->
 //        "\u001b[33;1m$message\u001b[0m"
 //    }
 //    val heroName = readLine()
@@ -10,7 +12,7 @@ fun main() {
 //        "The hero must have a name"
 //    }
 
-//    changeNarratorMood()
+//    com.bignerdranch.nyetHack.changeNarratorMood()
     narrate("${player.name}, ${player.title} heads to the town square")
     visitTavern()
     player.castFireBall()

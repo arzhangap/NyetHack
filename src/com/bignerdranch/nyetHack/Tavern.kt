@@ -1,6 +1,6 @@
+package com.bignerdranch.nyetHack
+
 import java.io.File
-import java.util.StringJoiner
-import kotlin.math.max
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -34,7 +34,7 @@ private val menuItemTypes= menuData.associate { menuEnty ->
 }
 
 fun visitTavern() {
-    narrate("$heroName enters the $TAVERN_NAME")
+    narrate("${player.name} enters the $TAVERN_NAME")
     narrate("There are several items for sale:")
 
    menuItems.forEachIndexed item@{ index, item ->
@@ -42,7 +42,7 @@ fun visitTavern() {
            println(item.replace(" holder ", ".".repeat((big - item.length) + 4)))
            return@item
        }
-       println(item.replace(" holder ", ".".repeat((big-item.length)+5)))
+       println(item.replace(" holder ", ".".repeat((big -item.length)+5)))
    }
 
     val orderHistory = mutableMapOf(*menuItemName.map { it to 0 }.toTypedArray())
@@ -53,15 +53,15 @@ fun visitTavern() {
 
     val patronGold = mutableMapOf(
         TAVERN_MASTER to 86.00,
-        heroName to 4.50,
+        player.name to 4.50,
         *patrons.map { it to 6.00 }.toTypedArray()
     )
 
-    narrate("$heroName sees several patrons in the tavern.")
+    narrate("${player.name} sees several patrons in the tavern.")
 
     narrate(patrons.joinToString())
 
-    val itemOfDay = patrons.flatMap { getFavoriteMenuItems(it)}.random()
+    val itemOfDay = patrons.flatMap { getFavoriteMenuItems(it) }.random()
     println("item of the day: $itemOfDay")
 
     displayPatronBalances(patronGold)
@@ -76,7 +76,7 @@ fun visitTavern() {
         // Eliminating
         patrons -= departingPatrons
         patronGold -= departingPatrons
-    }.forEach { patron -> narrate("$heroName sees $patron departing the tavern") }
+    }.forEach { patron -> narrate("${player.name} sees $patron departing the tavern") }
 
     narrate("There are still some patrons in the tavern")
     narrate(patrons.joinToString())
@@ -96,7 +96,7 @@ private fun getFavoriteMenuItems(patron: String) : List<String> {
 
 
 private fun displayPatronBalances(patronGold: Map<String, Double>) {
-    narrate("$heroName intuitively knows how much money each patron has")
+    narrate("${player.name} intuitively knows how much money each patron has")
     patronGold.forEach {(patron, balance) ->
         narrate("$patron has ${"%.2f".format(balance)} gold")
 
