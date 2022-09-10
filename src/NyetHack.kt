@@ -1,5 +1,7 @@
-var heroName: String = ""
+val player = Player()
 fun main() {
+    narrate("${player.name} is ${player.title}")
+    player.changeName("Arzhang")
 //    narrate("A hero enters the town of Kronstadt. What is their name?") { message ->
 //        "\u001b[33;1m$message\u001b[0m"
 //    }
@@ -7,11 +9,12 @@ fun main() {
 //    require(heroName != null && heroName.isNotEmpty()) {
 //        "The hero must have a name"
 //    }
-    heroName = promptHeroName()
 
 //    changeNarratorMood()
-    narrate("$heroName, ${createTitle(heroName)} heads to the town square")
+    narrate("${player.name}, ${player.title} heads to the town square")
     visitTavern()
+    player.castFireBall()
+
 }
 
 private fun promptHeroName() : String {
@@ -30,15 +33,4 @@ private fun promptHeroName() : String {
 
     println("Madrigal")
     return "Madrigal"
-}
-
-fun createTitle(name: String) : String {
-    return when {
-        name.all {it.isDigit()} -> "The Identifiable"
-        name.none {it.isLetter()} -> "The Witness Protection Member"
-        name.count {it.toLowerCase() in "aeiou"} > 4 -> "The Master of Vowels"
-        name.all {it.isUpperCase() } -> "The Bold"
-        name.count {it.isLetter()} > 10 -> "The Verbose"
-        else -> "The Renowned Hero"
-    }
 }
