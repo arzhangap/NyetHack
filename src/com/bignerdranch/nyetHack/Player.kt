@@ -1,11 +1,21 @@
 package com.bignerdranch.nyetHack
 
-class Player {
-    var name = "madrigal"
+import com.sun.org.apache.xpath.internal.operations.Bool
+
+class Player(
+    initialName: String,
+    hometown: String,
+    healthPoints: Int,
+    isImmortal: Boolean
+) {
+    var name = initialName
         get() = field.replaceFirstChar { it.uppercase() }
         private set(name) {
             field = name.trim()
         }
+    val hometown = hometown
+    val healthPoints = healthPoints
+    val isImmortal = isImmortal
 
     val title
         get() = when {

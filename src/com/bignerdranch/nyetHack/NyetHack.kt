@@ -1,9 +1,12 @@
 package com.bignerdranch.nyetHack
 
-val player = Player()
+val player = Player("Arzhang","Jacksonvillie", 100, false)
 fun main() {
-    narrate("${player.name} is ${player.title}")
-    player.changeName("Arzhang")
+    //change narrator mood
+    val mortality = if(player.isImmortal) "an Immortal" else "a mortal"
+    narrate("${player.name} of ${player.hometown}, ${player.title}, heads to the town square." +
+            " ${player.name}, $mortality, has ${player.healthPoints} health points.")
+
 //    com.bignerdranch.nyetHack.narrate("A hero enters the town of Kronstadt. What is their name?") { message ->
 //        "\u001b[33;1m$message\u001b[0m"
 //    }
@@ -13,7 +16,6 @@ fun main() {
 //    }
 
 //    com.bignerdranch.nyetHack.changeNarratorMood()
-    narrate("${player.name}, ${player.title} heads to the town square")
     visitTavern()
     player.castFireBall()
 
