@@ -4,18 +4,15 @@ import com.sun.org.apache.xpath.internal.operations.Bool
 
 class Player(
     initialName: String,
-    hometown: String,
-    healthPoints: Int,
-    isImmortal: Boolean
+    val hometown: String,
+    var healthPoints: Int,
+    val isImmortal: Boolean
 ) {
     var name = initialName
         get() = field.replaceFirstChar { it.uppercase() }
         private set(name) {
             field = name.trim()
         }
-    val hometown = hometown
-    val healthPoints = healthPoints
-    val isImmortal = isImmortal
 
     val title
         get() = when {
@@ -25,6 +22,17 @@ class Player(
             name.all {it.isUpperCase() } -> "The Bold"
             name.count {it.isLetter()} > 10 -> "The Verbose"
             else -> "The Renowned Hero"
+        }
+
+        constructor(name: String, hometown: String) : this(
+            initialName = name,
+            hometown = hometown,
+            healthPoints = 100,
+            isImmortal = false
+        ) {
+            if(name.equals("Arzhang", ignoreCase = true)) {
+                healthPoints = 500
+            }
         }
 
     fun castFireBall(numFireBalls: Int = 2) {

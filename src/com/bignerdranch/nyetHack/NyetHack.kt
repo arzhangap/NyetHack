@@ -1,6 +1,6 @@
 package com.bignerdranch.nyetHack
 
-val player = Player("Arzhang","Jacksonvillie", 100, false)
+val player = Player("Arzhang","Jacksonvillie")
 fun main() {
     //change narrator mood
     val mortality = if(player.isImmortal) "an Immortal" else "a mortal"
