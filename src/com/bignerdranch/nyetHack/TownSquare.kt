@@ -4,7 +4,7 @@ class TownSquare : Room(name = "The Town Square") {
     override val status = "Bustling"
     private val bellSound = "GWONG"
 
-    override fun enterRoom() {
+    final override fun enterRoom() {
         narrate("The Villagers rally and cheer as the hero enters.")
         ringBell()
     }

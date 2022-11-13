@@ -8,7 +8,7 @@ fun main() {
     //change narrator mood
     player.prophesize()
 
-    val currentRoom = Room("Te Foyer")
+    val currentRoom: Room = TownSquare()
     val mortality = if(player.isImmortal) "an Immortal" else "a mortal"
     narrate("${player.name} of ${player.hometown}, ${player.title}, is in ${currentRoom.description()}")
     narrate("${player.name}, $mortality, has ${player.healthPoints} health points.")
