@@ -33,57 +33,69 @@ private val menuItemTypes= menuData.associate { menuEnty ->
     name to type
 }
 
-fun visitTavern() {
-    narrate("${player.name} enters the $TAVERN_NAME")
-    narrate("There are several items for sale:")
-
-   menuItems.forEachIndexed item@{ index, item ->
-       if(index == menuItems.lastIndex) {
-           println(item.replace(" holder ", ".".repeat((big - item.length) + 4)))
-           return@item
-       }
-       println(item.replace(" holder ", ".".repeat((big -item.length)+5)))
-   }
-
-    val orderHistory = mutableMapOf(*menuItemName.map { it to 0 }.toTypedArray())
-
+class Tavern : Room(TAVERN_NAME) {
     val patrons: MutableSet<String> = firstNames.shuffled()
-        .zip(lastNames.shuffled()) { firstName, lastName -> "$firstName $lastName"}
-        .toMutableSet()
+        .zip(lastNames.shuffled()) { firstName,lastName ->
+            "$firstName $lastName"
+        }.toMutableSet()
 
-    val patronGold = mutableMapOf(
+    val patronGold: MutableMap<String, Double> = mutableMapOf(
         TAVERN_MASTER to 86.00,
         player.name to 4.50,
-        *patrons.map { it to 6.00 }.toTypedArray()
+        *patrons.map {it to 6.00}.toTypedArray()
     )
 
-    narrate("${player.name} sees several patrons in the tavern.")
-
-    narrate(patrons.joinToString())
+    override val status: String = "Busy"
 
     val itemOfDay = patrons.flatMap { getFavoriteMenuItems(it) }.random()
-    println("item of the day: $itemOfDay")
+    override fun enterRoom() {
+        narrate("${player.name} enters the $TAVERN_NAME")
+        narrate("There are several items for sale:")
 
-    displayPatronBalances(patronGold)
-    repeat(10){
-        val order = menuItemName.random()
-        orderHistory[order] = orderHistory[order]!! + 1
-        placeOrder(patrons.random(), order, patronGold)
+        // Prints menu items in a formatted way.
+        menuItems.forEachIndexed item@{ index, item ->
+            if(index == menuItems.lastIndex) {
+                println(item.replace(" holder ", ".".repeat((big - item.length) + 4)))
+                return@item
+            }
+            println(item.replace(" holder ", ".".repeat((big -item.length)+5)))
+        }
+
+        val orderHistory = mutableMapOf(*menuItemName.map { it to 0 }.toTypedArray())
+
+        narrate("${player.name} sees several patrons in the tavern.")
+        narrate(patrons.joinToString())
+        narrate("item of the day: $itemOfDay")
+
+            val order = menuItemName.random()
+            orderHistory[order] = orderHistory[order]!! + 1
+            placeOrder(patrons.random(), order)
+
+        val favItem = orderHistory.maxWith(Comparator { x, y -> x.value.compareTo(y.value) })?.key
+        println("Most ordered item of the day is $favItem")
     }
-    displayPatronBalances(patronGold)
 
-    patrons.filter { patron -> patronGold.getOrDefault(patron, 0.0) < 4.0 }.also {departingPatrons ->
-        // Eliminating
-        patrons -= departingPatrons
-        patronGold -= departingPatrons
-    }.forEach { patron -> narrate("${player.name} sees $patron departing the tavern") }
+    private fun placeOrder(patronName: String, menuItemName: String){
+        val itemPrice = menuItemPrice.getValue(menuItemName)
 
-    narrate("There are still some patrons in the tavern")
-    narrate(patrons.joinToString())
-
-    val favItem = orderHistory.maxWith(Comparator { x, y -> x.value.compareTo(y.value) })?.key
-    println("Most ordered item of the day is $favItem")
+        narrate("$patronName speaks with $TAVERN_MASTER to place an order.")
+        if(itemPrice <= patronGold.getOrDefault(patronName, 0.0)) {
+            val action = when(menuItemTypes[menuItemName]) {
+                "shandy", "elixir" -> "pours"
+                "meal" -> "serves"
+                else -> "hands"
+            }
+            narrate("$TAVERN_MASTER $action $patronName a $menuItemName")
+            narrate("$patronName pays $TAVERN_MASTER $itemPrice gold.")
+            patronGold[patronName] = patronGold.getValue(patronName) - itemPrice
+            patronGold[TAVERN_MASTER] = patronGold.getValue(TAVERN_MASTER) + itemPrice
+        } else {
+            narrate("$TAVERN_MASTER says, \"You need more coin for a $menuItemName \"")
+        }
+    }
 }
+
+
 
 private fun getFavoriteMenuItems(patron: String) : List<String> {
     return when (patron) {
@@ -91,33 +103,5 @@ private fun getFavoriteMenuItems(patron: String) : List<String> {
             menuItemTypes[menuItem]?.contains("desert") == true
         }
         else -> menuItemName.shuffled().take(Random.nextInt(1..2))
-    }
-}
-
-
-private fun displayPatronBalances(patronGold: Map<String, Double>) {
-    narrate("${player.name} intuitively knows how much money each patron has")
-    patronGold.forEach {(patron, balance) ->
-        narrate("$patron has ${"%.2f".format(balance)} gold")
-
-    }
-}
-
-private fun placeOrder(patronName: String, menuItemName: String, patronGold: MutableMap<String, Double>){
-    val itemPrice = menuItemPrice.getValue(menuItemName)
-
-    narrate("$patronName speaks with $TAVERN_MASTER to place an order.")
-    if(itemPrice <= patronGold.getOrDefault(patronName, 0.0)) {
-        val action = when(menuItemTypes[menuItemName]) {
-            "shandy", "elixir" -> "pours"
-            "meal" -> "serves"
-            else -> "hands"
-        }
-        narrate("$TAVERN_MASTER $action $patronName a $menuItemName")
-        narrate("$patronName pays $TAVERN_MASTER $itemPrice gold.")
-        patronGold[patronName] = patronGold.getValue(patronName) - itemPrice
-        patronGold[TAVERN_MASTER] = patronGold.getValue(TAVERN_MASTER) + itemPrice
-    } else {
-        narrate("$TAVERN_MASTER says, \"You need more coin for a $menuItemName \"")
     }
 }
