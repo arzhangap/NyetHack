@@ -5,15 +5,6 @@ fun main() {
     narrate("Welcome to NyetHack!")
     val playerName = promptHeroName()
     player = Player(playerName)
-    //change narrator mood
-    player.prophesize()
-
-    val currentRoom: Room = Tavern()
-    val mortality = if(player.isImmortal) "an Immortal" else "a mortal"
-
-    narrate("${player.name} of ${player.hometown}, ${player.title}, is in ${currentRoom.description()}")
-    narrate("${player.name}, $mortality, has ${player.healthPoints} health points.")
-    currentRoom.enterRoom()
 
 //    com.bignerdranch.nyetHack.narrate("A hero enters the town of Kronstadt. What is their name?") { message ->
 //        "\u001b[33;1m$message\u001b[0m"
@@ -25,8 +16,7 @@ fun main() {
 
 //    com.bignerdranch.nyetHack.changeNarratorMood()
 
-    player.castFireBall()
-    player.prophesize()
+    Game.play()
 
 }
 
