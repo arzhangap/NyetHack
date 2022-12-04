@@ -27,12 +27,34 @@ object Game {
         }
     }
 
+    fun move(direction: Direction) {
+        val newPosition = direction.updateCoordinate(currentPosition)
+        val newRoom = worldMap.getOrNull(newPosition.y)?.getOrNull(newPosition.x)
+
+        if (newRoom != null) {
+            narrate("The hero moves ${direction.name}")
+            currentPosition = newPosition
+            currentRoom = newRoom
+        } else {
+            narrate("You cannot move ${direction.name}")
+        }
+    }
+
     private class GameInput(arg: String?) {
         private val input = arg ?: ""
         val command = input.split(" ")[0]
         val argument = input.split(" ").getOrElse(1) {""}
 
         fun processCommand() = when(command.lowercase()) {
+            "move" -> {
+                val direction = Direction.values()
+                    .firstOrNull { it.name.equals(argument, ignoreCase = true) }
+                if(direction != null) {
+                    move(direction)
+                } else {
+                    narrate("I don't know what direction that is")
+                }
+            }
             else -> narrate("I'm not sure what you're trying to do")
         }
     }
