@@ -1,7 +1,13 @@
 package com.bignerdranch.nyetHack
 
 object Game {
-    private var currentRoom: Room = TownSquare()
+    private val worldMap = listOf(
+        listOf(TownSquare(), Tavern(), Room("Back Room")),
+        listOf(Room("A Long Corridor"), Room("A generic Room")),
+        listOf(Room("The Dungeon"))
+    )
+
+    private var currentRoom: Room = worldMap[0][0]
     private var currentPosition = Coordinate(0,0)
 
     init {
