@@ -9,6 +9,7 @@ object Game {
 
     private var currentRoom: Room = worldMap[0][0]
     private var currentPosition = Coordinate(0,0)
+    private var isPlaying = false
 
     init {
         narrate("Welcome, adventurer")
@@ -17,7 +18,8 @@ object Game {
     }
 
     fun play() {
-        while (true) {
+        isPlaying = true
+        while (isPlaying) {
             // Play NyetHack
             narrate("${player.name} of ${player.hometown}, ${player.title}, is in ${currentRoom.description()}")
             currentRoom.enterRoom()
@@ -54,6 +56,32 @@ object Game {
                 } else {
                     narrate("I don't know what direction that is")
                 }
+            }
+            "castfireball" -> {
+                val number = argument.toIntOrNull()
+                if(number != null) { player.castFireBall(number) } else {
+                    player.castFireBall()
+                }
+            }
+            "prophesize" -> {
+                player.prophesize()
+            }
+            "map" -> {
+               worldMap.forEach {
+                   it.forEach { if(!it.equals(currentRoom)) print("0 ") else print("X ") }
+                   println()
+               }
+            }
+            "ring" -> {
+                if(currentRoom.equals(worldMap[0][0])) {
+                    (currentRoom as TownSquare).ringBell()
+                } else {
+                    narrate("There is no bell to ring here.")
+                }
+            }
+            "quit" -> {
+                narrate("farewell ${player.name}.")
+                isPlaying = false
             }
             else -> narrate("I'm not sure what you're trying to do")
         }
