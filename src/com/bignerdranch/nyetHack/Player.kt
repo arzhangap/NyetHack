@@ -1,18 +1,24 @@
 package com.bignerdranch.nyetHack
 
-import com.sun.org.apache.xpath.internal.operations.Bool
-
 class Player(
     initialName: String,
     val hometown: String = "alwaysSummer",
-    var healthPoints: Int,
+    override var healthPoints: Int,
     val isImmortal: Boolean
-) {
-    var name = initialName
+) : Fightable {
+    override var name = initialName
         get() = field.replaceFirstChar { it.uppercase() }
         private set(name) {
             field = name.trim()
         }
+    override val diceCount: Int = 3
+    override var diceSides: Int = 4
+
+    override fun takeDamage(damage: Int) {
+        if(!isImmortal) {
+            healthPoints -= damage
+        }
+    }
 
     val title
         get() = when {
