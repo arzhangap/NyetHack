@@ -1,5 +1,6 @@
 package com.bignerdranch.nyetHack
 
+import java.time.Month
 import kotlin.random.Random
 
 
@@ -35,6 +36,21 @@ class Goblin(
     description: String = "A nasty-looking goblin",
     healthPoints: Int = 30,
 ) : Monster(name, description, healthPoints) {
-    override val diceCount = 2
-    override var diceSides = 8
+    override val diceCount = 1
+    override var diceSides = 6
+}
+
+class Werewolf(
+    name: String = "Werewolf",
+    description: String = "A fluffy cute wolf with sharp teeths",
+    healthPoints: Int = 50
+) : Monster(name,description,healthPoints) {
+    override val diceCount: Int = 2
+    override var diceSides: Int = 8
+}
+
+class Dragon(
+) : Monster("Dragon", "A big Lizard with wings and fire coming out of his mouth.",100) {
+    override val diceCount: Int = 3
+    override var diceSides: Int = 10
 }

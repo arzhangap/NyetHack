@@ -11,9 +11,19 @@ open class Room(val name: String) {
     }
 }
 
+private fun defineMonster(): Monster {
+    return listOf(
+        Goblin(),
+        Goblin(),
+        Goblin(),
+        Werewolf(),
+        Werewolf(),
+        Dragon()
+    ).random()
+}
 open class MonsterRoom(
     name: String,
-    var monster: Monster? = Goblin()
+    var monster: Monster? = defineMonster()
 ) : Room(name) {
     override fun description(): String =
         super.description() + " (Creature: ${monster?.description ?: "None"}"
