@@ -6,7 +6,7 @@ object Game {
     private val worldMap = listOf(
         listOf(TownSquare(), Tavern(), Room("Back Room")),
         listOf(MonsterRoom("A long Corridor"), Room("A generic Room")),
-        listOf(MonsterRoom("The Dungeon"))
+        listOf(MonsterRoom("The Dungeon"),MonsterRoom("The Mountain"),MonsterRoom("Secret Room"))
     )
 
     private var currentRoom: Room = worldMap[0][0]
