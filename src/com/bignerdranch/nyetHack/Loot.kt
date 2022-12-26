@@ -1,6 +1,13 @@
 package com.bignerdranch.nyetHack
 
-class LootBox<T>(var contents: T) {
+abstract class Loot {
+    abstract val name: String
+}
+
+interface Sellable {
+    val value: Int
+}
+class LootBox<T: Loot>(var contents: T) {
     var isOpen = false
         private set
 
@@ -11,14 +18,16 @@ class LootBox<T>(var contents: T) {
 }
 
 class Fedora(
-    val name: String,
-    val value: Int
-)
+    override val name: String,
+    override val value: Int
+) : Loot(), Sellable
 
 class Gemstones(
-    val value: Int
-)
+    override val value: Int
+) : Loot(), Sellable {
+    override val name = "sack of gemstones worth $value gold"
+}
 
-//class Key(
-//    val name: String
-//)
+class Key(
+    override val name: String
+) : Loot()
