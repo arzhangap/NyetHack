@@ -47,6 +47,8 @@ class Tavern : Room(TAVERN_NAME) {
 
     override val status: String = "Busy"
 
+    override val lootBox: LootBox<Key> = LootBox(Key("key to Nogartse's evil lair"))
+
     val itemOfDay = patrons.flatMap { getFavoriteMenuItems(it) }.random()
     override fun enterRoom() {
         narrate("${player.name} enters the $TAVERN_NAME")
@@ -94,9 +96,6 @@ class Tavern : Room(TAVERN_NAME) {
         }
     }
 }
-
-
-
 private fun getFavoriteMenuItems(patron: String) : List<String> {
     return when (patron) {
         "ALex Ironfoot" -> menuItemName.filter { menuItem ->

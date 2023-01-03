@@ -31,19 +31,6 @@ object Game {
         }
     }
 
-    fun move(direction: Direction) {
-        val newPosition = direction.updateCoordinate(currentPosition)
-        val newRoom = worldMap.getOrNull(newPosition.y)?.getOrNull(newPosition.x)
-
-        if (newRoom != null) {
-            narrate("The hero moves ${direction.name}")
-            currentPosition = newPosition
-            currentRoom = newRoom
-        } else {
-            narrate("You cannot move ${direction.name}")
-        }
-    }
-
     private class GameInput(arg: String?) {
         private val input = arg ?: ""
         val command = input.split(" ")[0]
@@ -57,14 +44,19 @@ object Game {
                 return
             }
 
+            var combatRound = 0
+            val previousNarriationModifier = narrationModifier
+            narrationModifier = { it.addEnthusiasm(enthusiasmLevel = combatRound) }
+
             while (player.healthPoints > 0 && currentMonster.healthPoints > 0) {
+                combatRound++
                 player.attack(currentMonster)
                 if(currentMonster.healthPoints > 0) {
                     currentMonster.attack(player)
                 }
                 Thread.sleep(1000)
             }
-
+            narrationModifier = previousNarriationModifier
             if(player.healthPoints <= 0) {
                 narrate("You have been defeated! Thanks for playing")
                 exitProcess(0)
@@ -86,10 +78,21 @@ object Game {
                     narrate("I don't know what direction that is")
                 }
             }
-            "castfireball" -> {
-                val number = argument.toIntOrNull()
-                if(number != null) { player.castFireBall(number) } else {
-                    player.castFireBall()
+            "take" -> {
+                if (argument.equals("loot", ignoreCase = true)) {
+                    takeLoot()
+                } else {
+                    narrate("I don't know what you're trying to take.")
+                }
+            }
+            "cast" -> {
+                if(argument.equals("fireball", ignoreCase = true)) {
+                    val number = argument.toIntOrNull()
+                    if(number != null) { player.castFireBall(number) } else {
+                        player.castFireBall()
+                    }
+                } else {
+                    narrate("I don't know what you're trying to cast.")
                 }
             }
             "prophesize" -> {
@@ -108,11 +111,57 @@ object Game {
                     narrate("There is no bell to ring here.")
                 }
             }
+            "sell" -> {
+                if (argument.equals("loot", ignoreCase = true)) {
+                    sellLoot()
+                } else {
+                    narrate("I don't know what you're trying to sell")
+                }
+            }
             "quit" -> {
                 narrate("farewell ${player.name}.")
                 isPlaying = false
             }
             else -> narrate("I'm not sure what you're trying to do")
+        }
+    }
+
+    fun sellLoot() {
+        when(val currentRoom = currentRoom) {
+            is TownSquare -> {
+                player.inventory.forEach { item ->
+                    if (item is Sellable) {
+                        val sellPrice = currentRoom.sellLoot(item)
+                        narrate("Sold ${item.name} for $sellPrice gold")
+                        player.gold += sellPrice
+                    } else {
+                        narrate(" Your ${item.name} can't be sold")
+                    }
+                }
+                player.inventory.removeAll { it is Sellable }
+            }
+            else -> narrate("You cannot sell anything here")
+        }
+    }
+    fun move(direction: Direction) {
+        val newPosition = direction.updateCoordinate(currentPosition)
+        val newRoom = worldMap.getOrNull(newPosition.y)?.getOrNull(newPosition.x)
+
+        if (newRoom != null) {
+            narrate("The hero moves ${direction.name}")
+            currentPosition = newPosition
+            currentRoom = newRoom
+        } else {
+            narrate("You cannot move ${direction.name}")
+        }
+    }
+    fun takeLoot() {
+        val loot = currentRoom.lootBox.takeLoot()
+        if (loot == null) {
+            narrate("${player.name} approaches the loot box, but it is empty.")
+        } else {
+            narrate("${ player.name} now has a ${loot.name}")
+            player.inventory += loot
         }
     }
 }

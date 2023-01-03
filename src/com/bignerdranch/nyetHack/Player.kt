@@ -71,4 +71,8 @@ class Player(
         narrate("$name thinks about their future")
         narrate("A fortune teller told Madrigal \"$prophecy\"")
     }
+
+    val inventory = mutableListOf<Loot>()
+
+    var gold = 0
 }
