@@ -6,16 +6,6 @@ fun main() {
     val playerName = promptHeroName()
     player = Player(playerName)
 
-    val lootBoxOne: LootBox<Fedora> = LootBox(Fedora("a generic-looking fedora", 15))
-//    val lootBoxTwo: LootBox<Gemstones> = LootBox(Gemstones(150))
-
-    repeat(2) {
-        narrate(
-            lootBoxOne.takeLoot()?.let {
-                "The hero retrieves ${it.name} from the box"
-            } ?: "The box is empty"
-        )
-    }
 //    com.bignerdranch.nyetHack.narrate("A hero enters the town of Kronstadt. What is their name?") { message ->
 //        "\u001b[33;1m$message\u001b[0m"
 //    }
