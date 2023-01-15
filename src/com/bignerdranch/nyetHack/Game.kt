@@ -14,7 +14,7 @@ object Game {
     private var isPlaying = false
 
     init {
-        narrate("Welcome, adventurer")
+        print("Welcome, adventurer".frame(5))
         val mortality = if(player.isImmortal) "an Immortal" else "a mortal"
         narrate("${player.name}, $mortality, has ${player.healthPoints} health points.")
     }
@@ -146,15 +146,11 @@ object Game {
     fun move(direction: Direction) {
 //        val newPosition = direction.updateCoordinate(currentPosition)
         val newPosition = currentPosition move direction
-        val newRoom = worldMap[newPosition]
+        val newRoom = worldMap[newPosition].orEmptyRoom().apply {  }
 
-        if (newRoom != null) {
             narrate("The hero moves ${direction.name}")
             currentPosition = newPosition
             currentRoom = newRoom
-        } else {
-            narrate("You cannot move ${direction.name}")
-        }
     }
     fun takeLoot() {
         val loot = currentRoom.lootBox.takeLoot()
@@ -165,4 +161,9 @@ object Game {
             player.inventory += loot
         }
     }
+
+    // extension function
+    operator fun List<List<Room>>.get(coordinate: Coordinate) =
+        getOrNull(coordinate.y)?.getOrNull(coordinate.x)
+
 }
